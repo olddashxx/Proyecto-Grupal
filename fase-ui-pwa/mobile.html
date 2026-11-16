@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <!-- === [CONFIGURACIÓN PWA MÓVIL 0 SCROLL]: Viewport + Manifest + Bootstrap 5 === -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#9a3412">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="description" content="App Móvil 0 Scroll — Sabores de Mi Tierra: Platos típicos bolivianos y Línea Embol.">
+  <title>Sabores de Mi Tierra | App Móvil</title>
+
+  <link rel="manifest" href="manifest.json">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="vista-mobile">
+
+  <!-- === [CONTENEDOR APP MÓVIL 100dvh]: 0 Scroll de Página === -->
+  <div class="pwa-container">
+
+    <!-- Barra de Estado, Rol Activo y Cambio a Vista PC -->
+    <div class="phone-status-bar">
+      <span style="white-space: nowrap;">Sabores BO</span>
+      <span id="estadoRed" class="estado-red-badge" style="padding: 2px 6px; font-size: 9.5px;">🟢 En Línea</span>
+      <span id="badgeRolVista" class="rol-vista-badge rol-cliente" style="padding: 2px 7px; font-size: 9.5px;">👤 Vista: Cliente</span>
+      <a href="index.html" class="text-warning text-decoration-none fw-bold" style="white-space: nowrap;">🖥️ PC</a>
+    </div>
+
+    <!-- Header Compacto con Login, Tema y Menú Hamburguesa -->
+    <header class="pwa-header">
+      <div class="d-flex align-items-center gap-2">
+        <span class="brand-emblem" style="width: 32px; height: 32px; font-size: 0.8rem;">SB</span>
+        <div>
+          <h2 class="m-0 fw-bold" style="font-size: 0.92rem; line-height: 1.05;">Sabores Bolivia</h2>
+          <small class="text-muted" style="font-size: 0.66rem;">Típicos &amp; Línea Embol</small>
+        </div>
+      </div>
+
+      <div id="contenedorMenu" class="d-flex align-items-center gap-1" data-hidratado="false">
+        <button id="btnAbrirLogin" class="btn btn-warning btn-sm fw-bold btn-hidratable" data-hidratado="false" type="button" style="padding: 3px 7px; font-size: 0.72rem;">🔑 Rol</button>
+        <button id="themeBtn" class="btn btn-outline-secondary btn-sm btn-hidratable" data-hidratado="false" type="button" style="padding: 3px 7px; font-size: 0.75rem;" title="Cambiar tema">🌓</button>
+        <button id="hamburgerBtn" class="btn btn-outline-secondary btn-sm btn-hidratable" data-hidratado="false" type="button" style="padding: 3px 7px;" aria-label="Menú rápido"><i class="bi bi-list"></i></button>
+      </div>
+    </header>
+
+    <!-- Menú Flotante -->
+    <nav id="navMenu" class="nav-menu-desplegable" aria-label="Menú móvil">
+      <div class="d-flex flex-column gap-2">
+        <button class="btn btn-link text-warning text-start text-decoration-none p-0 fw-semibold link-tab-movil btn-hidratable" data-hidratado="false" type="button" data-tab="tab-cliente">👤 Vista Cliente (Menú y Carrito)</button>
+        <button class="btn btn-link text-warning text-start text-decoration-none p-0 fw-semibold link-tab-movil btn-hidratable" data-hidratado="false" type="button" data-tab="tab-pos">🧾 Vista Trabajador (POS y Caja)</button>
+        <button class="btn btn-link text-warning text-start text-decoration-none p-0 fw-semibold link-tab-movil btn-hidratable" data-hidratado="false" type="button" data-tab="tab-admin">🛡️ Vista Admin (200+ Eventos)</button>
+        <button class="btn btn-link text-warning text-start text-decoration-none p-0 fw-semibold link-tab-movil btn-hidratable" data-hidratado="false" type="button" data-tab="tab-kardex">📦 Control de Stock / Kardex</button>
+        <a href="index.html" class="text-white text-decoration-none fw-semibold">🖥️ Ir a Vista Escritorio</a>
+      </div>
+    </nav>
+
+    <!-- === CONTENIDO PRINCIPAL DE LA APP (CERO SCROLL EN PÁGINA) === -->
+    <main class="pwa-main-content">
+
+      <!-- PESTAÑA 1: VISTA CLIENTE (MENÚ Y CARRITO / CHECKOUT) -->
+      <section id="tab-cliente" class="mobile-tab-panel active">
+        <div class="mobile-subnav">
+          <button type="button" class="btn-subtab btn-hidratable active" data-hidratado="false" data-subtab="sub-menu">🍲 Menú</button>
+          <button type="button" class="btn-subtab btn-hidratable" data-hidratado="false" data-subtab="sub-carrito">🛒 Carrito (<span id="carritoContador">0</span>)</button>
+        </div>
+
+        <!-- Subpanel 1A: Menú Interactivo -->
+        <div id="sub-menu" class="mobile-subpanel active">
+          <input type="text" id="buscarMenuCliente" class="form-control form-control-sm" placeholder="Buscar Fritanga, Sajta, Coca-Cola..." style="flex-shrink: 0;">
+          <div class="d-flex gap-1" style="flex-shrink: 0;">
+            <button type="button" class="btn btn-sm btn-warning fw-bold flex-fill py-1 btn-cat-menu btn-hidratable" data-hidratado="false" data-cat="todos" style="font-size: 0.7rem;">Todos</button>
+            <button type="button" class="btn btn-sm btn-outline-secondary fw-semibold flex-fill py-1 btn-cat-menu btn-hidratable" data-hidratado="false" data-cat="platos" style="font-size: 0.7rem;">🍲 Platos</button>
+            <button type="button" class="btn btn-sm btn-outline-danger fw-semibold flex-fill py-1 btn-cat-menu btn-hidratable" data-hidratado="false" data-cat="bebidas" style="font-size: 0.7rem;">🥤 Embol</button>
+          </div>
+          <div id="catalogoClienteGrid" class="compact-menu-grid"></div>
+        </div>
+
+        <!-- Subpanel 1B: Carrito y Checkout Simulado -->
+        <div id="sub-carrito" class="mobile-subpanel">
+          <div class="compact-card" style="flex-shrink: 0;">
+            <div class="d-flex justify-content-between align-items-center mb-1">
+              <strong style="font-size: 0.76rem;">Tu Pedido Actual</strong>
+              <div class="d-flex align-items-center gap-2">
+                <strong id="totalCarritoCliente" class="text-success" style="font-size: 0.86rem;">0 Bs</strong>
+                <button type="button" id="btnVaciarCarrito" class="btn btn-outline-danger btn-sm py-0 px-2 btn-hidratable" data-hidratado="false" style="font-size: 0.68rem;">Vaciar</button>
+              </div>
+            </div>
+            <div id="listaCarritoCliente" style="max-height: 98px; overflow-y: auto;"></div>
+          </div>
+
+          <div class="compact-card flex-fill" style="justify-content: space-between; overflow-y: auto;">
+            <form id="formCheckoutCliente" novalidate class="d-flex flex-column gap-1">
+              <div>
+                <input type="text" id="checkoutNombre" class="form-control form-control-sm" placeholder="Nombre del Cliente *">
+                <span id="errCheckoutNombre" class="error-msg" style="font-size: 0.66rem;">⚠️ Mínimo 3 letras.</span>
+              </div>
+              <div class="compact-grid-2">
+                <input type="text" id="checkoutNit" class="form-control form-control-sm" placeholder="NIT / CI">
+                <select id="checkoutModalidad" class="form-select form-select-sm">
+                  <option value="En Mesa">En Mesa</option>
+                  <option value="Para Llevar">Para Llevar</option>
+                  <option value="Delivery Local">Delivery</option>
+                </select>
+              </div>
+              <div class="compact-grid-2">
+                <select id="checkoutPago" class="form-select form-select-sm">
+                  <option value="Efectivo">Efectivo</option>
+                  <option value="QR">QR Simple</option>
+                </select>
+                <input type="text" id="checkoutNotas" class="form-control form-control-sm" placeholder="Nota cocina">
+              </div>
+              <button type="submit" id="btnConfirmarCheckout" class="btn btn-success btn-sm w-100 fw-bold btn-hidratable" data-hidratado="false">
+                Confirmar Pedido
+              </button>
+            </form>
+            <div id="alertaCheckout" class="mt-1"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- PESTAÑA 2: VISTA TRABAJADOR (PLANILLA DIGITAL + CAJA A-J + FACTURAS EMBOL) -->
+      <section id="tab-pos" class="mobile-tab-panel">
+        <div class="mobile-subnav">
+          <button type="button" class="btn-subtab btn-hidratable active" data-hidratado="false" data-subtab="sub-pos-planilla">📋 Planilla</button>
+          <button type="button" class="btn-subtab btn-hidratable" data-hidratado="false" data-subtab="sub-pos-caja">💵 Caja A–J</button>
+          <button type="button" class="btn-subtab btn-hidratable" data-hidratado="false" data-subtab="sub-pos-docs">📄 Embol / Cola</button>
+        </div>
+
+        <!-- Subpanel 2A: Planilla Digital Interactiva de 36 Ítems (Scroll interno) -->
+        <div id="sub-pos-planilla" class="mobile-subpanel active">
+          <div class="d-flex gap-1 align-items-center" style="flex-shrink: 0;">
+            <input type="text" id="planillaDia" class="form-control form-control-sm" value="Miércoles" style="width: 78px; font-size: 0.7rem;" aria-label="Día">
+            <input type="text" id="planillaHorario" class="form-control form-control-sm" value="12:17 - 16:18" style="width: 92px; font-size: 0.7rem;" aria-label="Horario">
+            <input type="date" id="planillaFecha" class="form-control form-control-sm flex-grow-1" value="2026-10-11" style="font-size: 0.7rem;" aria-label="Fecha">
+          </div>
+
+          <div class="d-flex gap-1" style="flex-shrink: 0;">
+            <button type="button" id="btnAgregarColumnaPlanilla" class="btn btn-warning btn-sm fw-bold flex-fill py-1 btn-hidratable" data-hidratado="false" style="font-size: 0.68rem;">+ Boleta</button>
+            <button type="button" id="btnCargarPlanillaFoto" class="btn btn-outline-primary btn-sm fw-semibold flex-fill py-1 btn-hidratable" data-hidratado="false" style="font-size: 0.68rem;">Hoja Foto</button>
+            <button type="button" id="btnLimpiarPlanilla" class="btn btn-outline-danger btn-sm fw-semibold flex-fill py-1 btn-hidratable" data-hidratado="false" style="font-size: 0.68rem;">Limpiar</button>
+            <button type="button" id="btnGuardarPlanillaEvento" class="btn btn-success btn-sm fw-bold flex-fill py-1 btn-hidratable" data-hidratado="false" style="font-size: 0.68rem;">Guardar</button>
+          </div>
+
+          <div class="planilla-wrapper">
+            <table id="tablaPlanillaFisica" class="tabla-planilla-fisica"></table>
+          </div>
+        </div>
+
+        <!-- Subpanel 2B: Liquidación A-J + Arqueo + Comanda Rápida POS -->
+        <div id="sub-pos-caja" class="mobile-subpanel">
+          <div class="compact-grid-2" style="flex-shrink: 0;">
+            <div class="kpi-card kpi-dorado py-1 px-2">
+              <small class="text-muted d-block" style="font-size: 0.65rem;">Caja Inicial</small>
+              <strong id="posCajaInicial" style="font-size: 0.85rem;">87.00 Bs</strong>
+            </div>
+            <div class="kpi-card kpi-verde py-1 px-2">
+              <small class="text-muted d-block" style="font-size: 0.65rem;">Saldo Caja Hoy</small>
+              <strong id="posSaldoCaja" style="font-size: 0.85rem;">452.00 Bs</strong>
+            </div>
+            <div class="kpi-card kpi-verde py-1 px-2">
+              <small class="text-muted d-block" style="font-size: 0.65rem;">Efectivo</small>
+              <strong id="posVentasEfectivo" style="font-size: 0.82rem;">365.00 Bs</strong>
+            </div>
+            <div class="kpi-card kpi-azul py-1 px-2">
+              <small class="text-muted d-block" style="font-size: 0.65rem;">Ventas QR</small>
+              <strong id="posVentasQR" style="font-size: 0.82rem;">219.00 Bs</strong>
+            </div>
+          </div>
+
+          <div class="mobile-scroll-inner d-flex flex-column gap-2">
+            <!-- Cuadro A a J completo en móvil -->
+            <div class="cuadro-liquidacion-aj">
+              <div class="fila-liquidacion destacada">
+                <div class="d-flex align-items-center gap-1"><span class="codigo-letra">A</span><span>TOTAL VENTAS</span></div>
+                <strong id="liqA_TotalVentas">584 Bs</strong>
+              </div>
+              <div class="fila-liquidacion">
+                <div class="d-flex align-items-center gap-1"><span class="codigo-letra">B</span><span>DESCUENTO</span></div>
+                <input type="number" id="liqB_Descuento" class="form-control form-control-sm liq-input" value="0" min="0">
+              </div>
+              <div class="fila-liquidacion destacada">
+                <div class="d-flex align-items-center gap-1"><span class="codigo-letra">C</span><span class="formula-pill">A-B</span><span>INGRESOS</span></div>
+                <strong id="liqC_TotalIngresos" class="text-success">584 Bs</strong>
+              </div>
+              <div class="fila-liquidacion">
+                <div class="d-flex align-items-center gap-1"><span class="codigo-letra">D</span><span>TARJETA</span></div>
+                <strong id="liqD_Tarjeta">0 Bs</strong>
+              </div>
+              <div class="fila-liquidacion">
+                <div class="d-flex align-items-center gap-1"><span class="codigo-letra">E</span><span>QR</span></div>
+                <strong id="liqE_QR" class="text-info">219 Bs</strong>
+              </div>
+              <div class="fila-liquidacion">
+                <div class="d-flex align-items-center gap-1"><span class="codigo-letra">F</span><span>COMPRAS</span></div>
+                <input type="number" id="liqF_Compras" class="form-control form-control-sm liq-input" value="0" min="0">
+              </div>
+              <div class="fila-liquidacion">
+                <div class="d-flex align-items-center gap-1"><span class="codigo-letra">G</span><span>PAGOS</span></div>
+                <input type="number" id="liqG_Pagos" class="form-control form-control-sm liq-input" value="0" min="0">
+              </div>
+              <div class="fila-liquidacion destacada">
+                <div class="d-flex align-items-center gap-1"><span class="codigo-letra">H</span><span class="formula-pill">C-D-E-F-G</span><span>EFECTIVO</span></div>
+                <strong id="liqH_TotalEfectivo" class="text-success">365 Bs</strong>
+              </div>
+              <div class="fila-liquidacion">
+                <div class="d-flex align-items-center gap-1"><span class="codigo-letra">I</span><span>CAJA INICIO</span></div>
+                <input type="number" id="liqI_CajaInicio" class="form-control form-control-sm liq-input" value="87" min="0">
+              </div>
+              <div class="fila-liquidacion destacada">
+                <div class="d-flex align-items-center gap-1"><span class="codigo-letra">J</span><span class="formula-pill">H+I</span><span>EFECT.+CAJA</span></div>
+                <strong id="liqJ_EfectivoMasCaja" class="text-primary">452 Bs</strong>
+              </div>
+            </div>
+
+            <form id="formCajaInicial" class="d-flex gap-1 align-items-center" novalidate>
+              <input type="number" id="inputCajaInicial" class="form-control form-control-sm" value="87" min="0" style="max-width: 100px;">
+              <button type="submit" class="btn btn-outline-primary btn-sm fw-semibold btn-hidratable" data-hidratado="false" style="font-size: 0.7rem;">Apertura</button>
+              <button type="button" id="btnCierreCajaDiario" class="btn btn-dark btn-sm fw-bold ms-auto btn-hidratable" data-hidratado="false" style="font-size: 0.7rem;">Cierre Diario</button>
+            </form>
+            <span id="errCajaInicial" class="error-msg">⚠️ Monto >= 0</span>
+
+            <div class="compact-card">
+              <form id="formComandaPOS" novalidate class="d-flex flex-column gap-1">
+                <strong style="font-size: 0.74rem;"><i class="bi bi-lightning-charge text-warning me-1"></i>Comanda Rápida POS</strong>
+                <select id="posSelectProducto" class="form-select form-select-sm"></select>
+                <div class="compact-grid-2">
+                  <input type="number" id="posCantidad" class="form-control form-control-sm" value="1" min="1" max="50" placeholder="Cant.">
+                  <input type="text" id="posClienteMesa" class="form-control form-control-sm" value="Mesa 1" placeholder="Mesa">
+                </div>
+                <select id="posMetodoPago" class="form-select form-select-sm">
+                  <option value="Efectivo">Efectivo (Bs)</option>
+                  <option value="QR">QR Simple</option>
+                </select>
+                <button type="submit" class="btn btn-success btn-sm fw-bold btn-hidratable" data-hidratado="false">Cobrar Comanda</button>
+              </form>
+              <div class="d-flex justify-content-between small text-muted pt-1 mt-1 border-top">
+                <span>Egresos Embol hoy:</span>
+                <strong id="posEgresosEmbol" class="text-danger">0.00 Bs</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Subpanel 2B: Factura Embol + Cola Blindada 44px + Turno -->
+        <div id="sub-pos-docs" class="mobile-subpanel">
+          <div class="compact-card" style="flex-shrink: 0;">
+            <form id="formCompraEmbol" novalidate class="d-flex flex-column gap-1">
+              <strong style="font-size: 0.74rem;"><i class="bi bi-truck text-danger me-1"></i>Factura Proveedor Embol / Insumos</strong>
+              <div class="compact-grid-2">
+                <select id="embolProveedor" class="form-select form-select-sm">
+                  <option value="Embol S.A. (Coca-Cola)">Embol S.A.</option>
+                  <option value="Frigorífico San Pedro">Frigorífico</option>
+                  <option value="Mercado Rodríguez">Mercado Rod.</option>
+                </select>
+                <input type="text" id="embolFactura" class="form-control form-control-sm" placeholder="N° Factura *">
+              </div>
+              <span id="errEmbolFactura" class="error-msg">⚠️ Mínimo 4 caracteres.</span>
+              <div class="d-flex gap-1">
+                <select id="embolProducto" class="form-select form-select-sm flex-grow-1"></select>
+                <input type="number" id="embolCantidad" class="form-control form-control-sm" value="12" min="1" style="width: 60px;">
+                <input type="number" id="embolCostoTotal" class="form-control form-control-sm" value="110" min="1" style="width: 68px;">
+              </div>
+              <span id="errEmbolCosto" class="error-msg">⚠️ Costo > 0</span>
+              <button type="submit" class="btn btn-danger btn-sm fw-bold btn-hidratable" data-hidratado="false">Registrar Factura</button>
+            </form>
+          </div>
+
+          <div class="cola-karaoke p-2 flex-fill d-flex flex-column" style="min-height: 0;">
+            <div class="d-flex gap-1 mb-1">
+              <input type="text" id="inputCancion" class="form-control form-control-sm" placeholder="Cola cocina (Mesa / Plato)...">
+              <button type="button" id="btnPedir" class="btn btn-dark btn-sm btn-tactil btn-hidratable" data-hidratado="false">+</button>
+            </div>
+            <span id="errInputCancion" class="error-msg">⚠️ Mínimo 3 caracteres.</span>
+            <div id="listaCanciones" class="mobile-scroll-inner"></div>
+            <ul id="listaReservas" class="d-none"></ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- PESTAÑA 3: VISTA ADMINISTRADOR (KPIs + AUDITORÍA 200+ EVENTOS) -->
+      <section id="tab-admin" class="mobile-tab-panel">
+        <div class="mobile-subnav">
+          <button type="button" class="btn-subtab btn-hidratable active" data-hidratado="false" data-subtab="sub-admin-kpi">📊 Métricas</button>
+          <button type="button" class="btn-subtab btn-hidratable" data-hidratado="false" data-subtab="sub-admin-auditoria">📑 200+ Eventos</button>
+        </div>
+
+        <!-- Subpanel 3A: Métricas Calculadas en Tiempo Real desde localStorage -->
+        <div id="sub-admin-kpi" class="mobile-subpanel active">
+          <div class="compact-grid-2" style="flex-shrink: 0;">
+            <div class="kpi-card kpi-dorado py-1 px-2">
+              <small class="text-muted d-block" style="font-size: 0.65rem;">Total Eventos</small>
+              <strong id="kpiTotalEventos" style="font-size: 0.95rem;">0</strong>
+            </div>
+            <div class="kpi-card kpi-verde py-1 px-2">
+              <small class="text-muted d-block" style="font-size: 0.65rem;">Ingresos Ventas</small>
+              <strong id="kpiIngresosTotales" style="font-size: 0.95rem;">0 Bs</strong>
+            </div>
+            <div class="kpi-card kpi-rojo py-1 px-2">
+              <small class="text-muted d-block" style="font-size: 0.65rem;">Compras Embol/Ins.</small>
+              <strong id="kpiEgresosTotales" style="font-size: 0.9rem;">0 Bs</strong>
+            </div>
+            <div class="kpi-card kpi-azul py-1 px-2">
+              <small class="text-muted d-block" style="font-size: 0.65rem;">Saldo Neto</small>
+              <strong id="kpiSaldoNeto" style="font-size: 0.9rem;">0 Bs</strong>
+            </div>
+            <div class="kpi-card py-1 px-2">
+              <small class="text-muted d-block" style="font-size: 0.65rem;">Platos Vendidos</small>
+              <strong id="kpiPlatosVendidos" style="font-size: 0.9rem;">0</strong>
+            </div>
+            <div class="kpi-card kpi-rojo py-1 px-2">
+              <small class="text-muted d-block" style="font-size: 0.65rem;">Bebidas Embol</small>
+              <strong id="kpiBebidasVendidas" style="font-size: 0.9rem;">0</strong>
+            </div>
+          </div>
+
+          <div class="d-flex gap-2" style="flex-shrink: 0;">
+            <button type="button" id="btnExportarEventos" class="btn btn-outline-success btn-sm flex-fill fw-semibold btn-hidratable" data-hidratado="false" style="font-size: 0.72rem;">Exportar CSV</button>
+            <button type="button" id="btnReset200Eventos" class="btn btn-outline-warning btn-sm flex-fill fw-semibold btn-hidratable" data-hidratado="false" style="font-size: 0.72rem;">Reset 205 Eventos</button>
+          </div>
+
+          <div class="compact-card flex-fill" style="min-height: 0;">
+            <strong class="mb-1" style="font-size: 0.72rem;">Últimos Movimientos del Turno</strong>
+            <div class="mobile-scroll-inner">
+              <table class="table table-sm table-striped align-middle mb-0" style="font-size: 0.68rem;">
+                <tbody id="tablaMovimientosPOS"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Subpanel 3B: Tabla de Auditoría 200+ Eventos -->
+        <div id="sub-admin-auditoria" class="mobile-subpanel">
+          <div class="d-flex justify-content-between align-items-center" style="flex-shrink: 0;">
+            <strong style="font-size: 0.74rem;">Auditoría (<span id="contadorEventosAuditoria">0</span>)</strong>
+            <select id="filtroTipoEvento" class="form-select form-select-sm" style="width: auto; font-size: 0.7rem;">
+              <option value="todos">Todos</option>
+              <option value="VENTA">Ventas</option>
+              <option value="COMPRA">Compras</option>
+              <option value="CIERRE_CAJA">Cierres</option>
+            </select>
+            <select id="filtroMetodoEvento" class="form-select form-select-sm" style="width: auto; font-size: 0.7rem;">
+              <option value="todos">Método</option>
+              <option value="Efectivo">Efectivo</option>
+              <option value="QR">QR</option>
+              <option value="Factura">Factura</option>
+              <option value="Arqueo">Arqueo</option>
+            </select>
+          </div>
+          <input type="text" id="buscarEventoAdmin" class="form-control form-control-sm" placeholder="Buscar factura, Fritanga, Embol..." style="flex-shrink: 0;">
+          <div class="tabla-auditoria-wrap flex-fill" style="max-height: none;">
+            <table class="table table-sm table-hover align-middle mb-0" style="font-size: 0.68rem;">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Fecha</th>
+                  <th>Tipo</th>
+                  <th>Detalle</th>
+                  <th>Pago</th>
+                  <th class="text-end">Bs</th>
+                </tr>
+              </thead>
+              <tbody id="tablaAuditoriaEventos"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- PESTAÑA 4: CONTROL DE STOCK ACTUAL (KARDEX) -->
+      <section id="tab-kardex" class="mobile-tab-panel">
+        <div class="compact-card flex-fill" style="min-height: 0;">
+          <h3 class="h6 fw-bold mb-1" style="font-size: 0.8rem;"><i class="bi bi-boxes text-warning me-1"></i>Stock Actual de Platos y Línea Embol</h3>
+          <div class="mobile-scroll-inner">
+            <table class="table table-sm table-striped align-middle mb-0" style="font-size: 0.72rem;">
+              <thead>
+                <tr>
+                  <th>Producto</th>
+                  <th class="text-center">Stock</th>
+                  <th class="text-end">Bs</th>
+                  <th class="text-end">Reponer</th>
+                </tr>
+              </thead>
+              <tbody id="tablaStockAdmin"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- === BARRA DE NAVEGACIÓN INFERIOR 4 PESTAÑAS === -->
+    <nav class="mobile-bottom-nav" aria-label="Navegación Móvil">
+      <button type="button" class="btn-nav-tab btn-hidratable active" data-hidratado="false" data-tab="tab-cliente">
+        <i class="bi bi-basket2-fill"></i>
+        <span>Cliente</span>
+      </button>
+      <button type="button" class="btn-nav-tab btn-hidratable" data-hidratado="false" data-tab="tab-pos">
+        <i class="bi bi-cash-coin"></i>
+        <span>POS Caja</span>
+      </button>
+      <button type="button" class="btn-nav-tab btn-hidratable" data-hidratado="false" data-tab="tab-admin">
+        <i class="bi bi-shield-check"></i>
+        <span>Admin 200+</span>
+      </button>
+      <button type="button" class="btn-nav-tab btn-hidratable" data-hidratado="false" data-tab="tab-kardex">
+        <i class="bi bi-boxes"></i>
+        <span>Kardex</span>
+      </button>
+    </nav>
+
+  </div>
+
+  <!-- === [MODAL DE LOGIN POR ROLES] === -->
+  <div id="modalLogin" class="modal-custom-overlay" role="dialog" aria-modal="true" aria-labelledby="tituloModalLogin">
+    <div class="modal-custom-card">
+      <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-2">
+        <h3 id="tituloModalLogin" class="h6 fw-bold m-0"><i class="bi bi-person-badge me-1"></i>Acceso por Rol</h3>
+        <button id="btnCerrarLogin" type="button" class="btn btn-sm btn-outline-secondary btn-hidratable" data-hidratado="false">✕</button>
+      </div>
+      <div class="alert alert-warning py-1 px-2 small mb-2">
+        Cliente: <code>cliente</code>/<code>1234</code> • Trabajador: <code>trabajador</code>/<code>1234</code> • Admin: <code>admin</code>/<code>1234</code>
+      </div>
+      <form id="formLogin" novalidate>
+        <div class="mb-2">
+          <input type="text" id="loginUsuario" class="form-control form-control-sm" placeholder="Usuario (cliente, trabajador, admin)">
+          <span id="errLoginUsuario" class="error-msg">⚠️ Mínimo 3 caracteres.</span>
+        </div>
+        <div class="mb-2">
+          <input type="password" id="loginPassword" class="form-control form-control-sm" placeholder="Contraseña (1234)">
+          <span id="errLoginPassword" class="error-msg">⚠️ Mínimo 4 caracteres.</span>
+        </div>
+        <span id="errCredencialesLogin" class="error-msg mb-2">⚠️ Credenciales inválidas.</span>
+        <div class="d-flex justify-content-end gap-2">
+          <button id="btnCerrarSesion" type="button" class="btn btn-outline-secondary btn-sm btn-hidratable" data-hidratado="false" style="display: none;">Salir</button>
+          <button id="btnSubmitLogin" type="submit" class="btn btn-warning btn-sm fw-bold btn-hidratable" data-hidratado="false">Ingresar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- === [MODAL CONFIRMACIÓN CHECKOUT + TEMPORIZADOR 30s] === -->
+  <div id="modalConfirmarCheckout" class="modal-custom-overlay" role="dialog" aria-modal="true" aria-labelledby="tituloModalCheckout">
+    <div class="modal-custom-card">
+      <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-2">
+        <h3 id="tituloModalCheckout" class="h6 fw-bold m-0"><i class="bi bi-bag-check-fill text-success me-1"></i>Confirmar Pedido</h3>
+        <button id="btnCerrarModalCheckout" type="button" class="btn btn-sm btn-outline-secondary btn-hidratable" data-hidratado="false">✕</button>
+      </div>
+      <div class="bg-body-secondary rounded p-2 mb-2 small">
+        <div><strong>Cliente:</strong> <span id="modalCheckoutCliente">-</span></div>
+        <div><strong>Detalle:</strong> <span id="modalCheckoutResumen">-</span></div>
+        <div><strong>Total:</strong> <strong id="modalCheckoutMonto" class="text-success">0 Bs</strong></div>
+        <div class="mt-1 pt-1 border-top d-flex justify-content-between align-items-center">
+          <span>Vigencia:</span>
+          <span id="timerCheckout30s" class="badge text-bg-warning fw-bold">00:30</span>
+        </div>
+      </div>
+      <div class="d-flex justify-content-end gap-2">
+        <button id="btnCancelarModalCheckout" type="button" class="btn btn-outline-secondary btn-sm btn-hidratable" data-hidratado="false">Cancelar</button>
+        <button id="btnProcesarModalCheckout" type="button" class="btn btn-success btn-sm fw-bold btn-hidratable" data-hidratado="false">Procesar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- === [TOAST FLOTANTE] === -->
+  <div id="toastNotificacion" class="toast-custom-box" role="status" aria-live="polite">
+    <strong id="toastTitulo" class="d-block small">Sabores de Mi Tierra</strong>
+    <span id="toastMensaje" class="small">Operación registrada.</span>
+  </div>
+
+  <!-- Script Modular JavaScript Vanilla -->
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,26 @@
+{
+  "name": "Sabores de Mi Tierra — Gastronomía Boliviana & Línea Embol",
+  "short_name": "Sabores Bolivia",
+  "description": "Sistema Frontend SPA para microempresa de platos típicos bolivianos (Fritanga, Sajta, Ranga, Fricasé, Falso Conejo) y bebidas Embol.",
+  "start_url": "./mobile.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#1c120c",
+  "theme_color": "#9a3412",
+  "lang": "es",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' rx='40' fill='%237c2d12'/%3E%3Ccircle cx='96' cy='76' r='36' fill='%23f59e0b' opacity='0.22' stroke='%23fbbf24' stroke-width='5'/%3E%3Ctext x='96' y='91' text-anchor='middle' font-size='40' font-family='Segoe UI, Arial, sans-serif' font-weight='800' fill='%23fbbf24'%3ESB%3C/text%3E%3Ctext x='96' y='150' text-anchor='middle' font-size='18' font-family='Segoe UI, Arial, sans-serif' font-weight='700' fill='%23ffffff'%3ESABORES BO%3C/text%3E%3C/svg%3E",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='108' fill='%237c2d12'/%3E%3Ccircle cx='256' cy='204' r='102' fill='%23f59e0b' opacity='0.2' stroke='%23fbbf24' stroke-width='12'/%3E%3Ctext x='256' y='244' text-anchor='middle' font-size='108' font-family='Segoe UI, Arial, sans-serif' font-weight='800' fill='%23fbbf24'%3ESB%3C/text%3E%3Ctext x='256' y='400' text-anchor='middle' font-size='48' font-family='Segoe UI, Arial, sans-serif' font-weight='700' fill='%23ffffff'%3ESABORES BOLIVIA%3C/text%3E%3C/svg%3E",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
